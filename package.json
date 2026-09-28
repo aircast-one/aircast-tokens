@@ -1,0 +1,10 @@
+{
+  "name": "@aircast/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "files": ["tokens.css"],
+  "exports": {
+    "./tokens.css": "./tokens.css"
+  }
+}
