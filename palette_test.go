@@ -1,6 +1,7 @@
 package tokens
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -53,6 +54,22 @@ func TestTheDarkSchemeIsTheWebPaletteWithSurfacesThatClimb(t *testing.T) {
 			if s.Name == base && Contrast(r.Color, s.Color) < 4.5 {
 				t.Errorf("%s on %s has contrast %.1f, under 4.5", r.Name, base, Contrast(r.Color, s.Color))
 			}
+		}
+	}
+}
+
+func TestMaterialCSSFollowsTheSystemSchemeLikeTheApps(t *testing.T) {
+	css, err := MaterialCSS()
+	if err != nil {
+		t.Fatal(err)
+	}
+	dark, err := Material(Dark)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{":root {\n\t--md-primary: #", "@media (prefers-color-scheme: dark) {\n\t:root:not(.light) {", ":root.dark {", "--md-surface-container-high: #", "--md-on-success: #", fmt.Sprintf("--md-primary: #%06X;", dark.Scheme[0].Color.Hex())} {
+		if !strings.Contains(css, want) {
+			t.Errorf("material CSS lacks %q", want)
 		}
 	}
 }
