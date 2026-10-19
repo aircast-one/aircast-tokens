@@ -94,3 +94,15 @@ func TestBothModesRenderForKotlinAndSwift(t *testing.T) {
 		}
 	}
 }
+
+func TestQtCarriesBothSchemesWithTheChromeColoursAndTheRadius(t *testing.T) {
+	qt, err := Qt()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{"inline constexpr double radiusRem = 0.625;", "inline constexpr Scheme dark {\n    .primary = 0x0088F2,", "    .background = 0x0D0E11,", "inline constexpr Scheme light {", "    std::uint32_t onWarning;", "    .warningContainer = 0x"} {
+		if !strings.Contains(qt, want) {
+			t.Errorf("Qt header lacks %q", want)
+		}
+	}
+}

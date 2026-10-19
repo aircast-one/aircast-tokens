@@ -23,11 +23,12 @@ go tool aircast-tokens > internal/web/assets/styles/tokens.css
 
 Each app keeps its own fonts, type scale and `dark` variant selector; only the palette and radius scale live here.
 
-**Native apps** (Android Compose and iOS SwiftUI in qgroundcontrol) take the same palette as Material 3 colour schemes:
+**Native apps** (Android Compose, iOS SwiftUI and the Qt desktop head in qgroundcontrol) take the same palette as Material 3 colour schemes:
 
 ```
 go run github.com/aircast-one/aircast-tokens/cmd/aircast-tokens@<commit> -format kotlin -package one.aircast.map > AircastTokens.kt
 go run github.com/aircast-one/aircast-tokens/cmd/aircast-tokens@<commit> -format swift > AircastTokens.swift
+go run github.com/aircast-one/aircast-tokens/cmd/aircast-tokens@<commit> -format qt > AircastTokens.h
 ```
 
 `material.go` maps the tokens onto Material roles once for both platforms: primary and the text colours map one to one, the surface containers step through background, sidebar, card and secondary, outlines are the web's input and border composited onto the background, and containers are the colour mixed into the background in OKLCH.

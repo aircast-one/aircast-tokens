@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	format := flag.String("format", "css", "css, material-css, kotlin or swift")
+	format := flag.String("format", "css", "css, material-css, kotlin, swift or qt")
 	pkg := flag.String("package", "one.aircast.map", "Kotlin package for -format kotlin")
 	flag.Parse()
 	out, err := render(*format, *pkg)
@@ -32,6 +32,8 @@ func render(format, pkg string) (string, error) {
 		return tokens.Kotlin(pkg)
 	case "swift":
 		return tokens.Swift()
+	case "qt":
+		return tokens.Qt()
 	}
-	return "", fmt.Errorf("unknown -format %q: want css, material-css, kotlin or swift", format)
+	return "", fmt.Errorf("unknown -format %q: want css, material-css, kotlin, swift or qt", format)
 }

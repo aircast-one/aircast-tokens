@@ -2,6 +2,7 @@ package tokens
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -203,6 +204,52 @@ func Swift() (string, error) {
 	}
 	status("Dark", dark)
 	status("Light", light)
+	b.WriteString("}\n")
+	return b.String(), nil
+}
+
+var radiusPattern = regexp.MustCompile(`--radius:\s*([0-9.]+)rem`)
+
+func RadiusRem() (float64, error) {
+	m := radiusPattern.FindStringSubmatch(string(CSS))
+	if m == nil {
+		return 0, fmt.Errorf("tokens.css has no --radius in rem")
+	}
+	return number(m[1]), nil
+}
+
+func Qt() (string, error) {
+	dark, err := Material(Dark)
+	if err != nil {
+		return "", err
+	}
+	light, err := Material(Light)
+	if err != nil {
+		return "", err
+	}
+	radius, err := RadiusRem()
+	if err != nil {
+		return "", err
+	}
+	var b strings.Builder
+	b.WriteString(generatedHeader)
+	b.WriteString("#pragma once\n\n#include <cstdint>\n\nnamespace AircastTokens {\n\n")
+	fmt.Fprintf(&b, "inline constexpr double radiusRem = %g;\n\n", radius)
+	roles := append(append([]Role{}, dark.Scheme...), dark.Status...)
+	b.WriteString("struct Scheme {\n")
+	for _, r := range roles {
+		fmt.Fprintf(&b, "    std::uint32_t %s;\n", r.Name)
+	}
+	b.WriteString("};\n\n")
+	scheme := func(name string, n Native) {
+		fmt.Fprintf(&b, "inline constexpr Scheme %s {\n", name)
+		for _, r := range append(append([]Role{}, n.Scheme...), n.Status...) {
+			fmt.Fprintf(&b, "    .%s = 0x%06X,\n", r.Name, r.Color.Hex())
+		}
+		b.WriteString("};\n\n")
+	}
+	scheme("dark", dark)
+	scheme("light", light)
 	b.WriteString("}\n")
 	return b.String(), nil
 }
