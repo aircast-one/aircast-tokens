@@ -31,7 +31,7 @@ go run github.com/aircast-one/aircast-tokens/cmd/aircast-tokens@<commit> -format
 go run github.com/aircast-one/aircast-tokens/cmd/aircast-tokens@<commit> -format qt > AircastTokens.h
 ```
 
-`material.go` maps the tokens onto Material roles once for both platforms: primary and the text colours map one to one, the surface containers step through background, sidebar, card and secondary, outlines are the web's input and border composited onto the background, and containers are the colour mixed into the background in OKLCH.
+`material.go` maps the tokens onto Material roles once for both platforms: primary and the text colours map one to one, the surface containers step through background, sidebar, card and secondary, the outline is the midpoint between the text and background colours (at least 3:1 against every surface, like Material's neutral tone 50), the outline variant is the web's border composited onto the background for dividers, and containers are the colour mixed into the background in OKLCH.
 
 ## Changing a token
 

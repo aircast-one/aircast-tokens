@@ -19,6 +19,7 @@ type Native struct {
 const (
 	containerWeight = 0.3
 	statusWeight    = 0.25
+	outlineWeight   = 0.5
 )
 
 var black = RGB{}
@@ -73,7 +74,7 @@ func Material(mode Mode) (Native, error) {
 			{"onSurface", fg},
 			{"surfaceVariant", rgb("muted")},
 			{"onSurfaceVariant", rgb("muted-foreground")},
-			{"outline", Over(t["input"], bg)},
+			{"outline", Mix(t["background"], t["foreground"], outlineWeight).SRGB()},
 			{"outlineVariant", Over(t["border"], bg)},
 			{"surfaceDim", bg},
 			{"surfaceBright", bright},

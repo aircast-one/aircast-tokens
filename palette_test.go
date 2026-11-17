@@ -106,3 +106,24 @@ func TestQtCarriesBothSchemesWithTheChromeColoursAndTheRadius(t *testing.T) {
 		}
 	}
 }
+
+func TestOutlinesStandOutFromEverySurfaceWhileDividersStayQuiet(t *testing.T) {
+	for _, mode := range []Mode{Light, Dark} {
+		n, err := Material(mode)
+		if err != nil {
+			t.Fatal(err)
+		}
+		role := map[string]RGB{}
+		for _, r := range n.Scheme {
+			role[r.Name] = r.Color
+		}
+		for _, surface := range []string{"background", "surface", "surfaceVariant", "surfaceContainerLowest", "surfaceContainerLow", "surfaceContainer", "surfaceContainerHigh", "surfaceContainerHighest"} {
+			if c := Contrast(role["outline"], role[surface]); c < 3 {
+				t.Errorf("%s outline on %s has contrast %.2f, under 3", mode, surface, c)
+			}
+		}
+		if Contrast(role["outlineVariant"], role["surface"]) >= Contrast(role["outline"], role["surface"]) {
+			t.Errorf("%s outlineVariant is as strong as outline; dividers should stay quieter", mode)
+		}
+	}
+}
